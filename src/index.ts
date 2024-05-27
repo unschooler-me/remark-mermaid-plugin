@@ -24,15 +24,20 @@ const remarkMermaid: Plugin<[RemarkMermaidOptions?], any> =
       }
 
       const results = instances.map((ins) => {
-        const code = ins[0];
-        const id = "mermaid" + Math.random().toString(36).slice(2);
-        mermaid.initialize({ theme: theme });
-        const div = document.createElement("div");
-        div.innerHTML = `<pre><code class="hljs language-mermaid">${mermaid.render(
-          id,
-          code
-        )}</code></pre>`;
-        return div.innerHTML;
+        try {
+          const code = ins[0];
+          const id = "mermaid" + Math.random().toString(36).slice(2);
+          mermaid.initialize({ theme: theme });
+          const div = document.createElement("div");
+          div.innerHTML = `<pre><code class="hljs language-mermaid">${mermaid.render(
+              id,
+              code
+          )}</code></pre>`;
+          return div.innerHTML;
+        } catch (err) {
+          // skip diagram with error
+          return '<div></div>';
+        }
       });
 
       instances.forEach(([, index, parent], i) => {
